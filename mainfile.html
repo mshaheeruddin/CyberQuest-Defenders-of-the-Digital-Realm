@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CyberGuardians</title>
+  <style>
+    /* CSS styles for game interface */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    #characterCreation {
+      text-align: center;
+      margin-top: 100px;
+    }
+    
+    #gameWorld {
+      display: none;
+    }
+    
+    #missions {
+      margin-top: 20px;
+    }
+    
+    .mission {
+      background-color: #f2f2f2;
+      padding: 10px;
+      margin-bottom: 10px;
+      transition: transform 0.3s;
+    }
+    
+    .mission:hover {
+      transform: scale(1.05);
+    }
+    
+    #experience {
+      margin-top: 20px;
+    }
+    
+    #progressBar {
+      background-color: #e5e5e5;
+      height: 20px;
+      border-radius: 10px;
+      width: 300px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    
+    #progressBarFill {
+      background-color: #4caf50;
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s;
+    }
+  </style>
+</head>
+<body>
+  <div id="characterCreation">
+    <form id="characterCreationForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required><br><br>
+      
+      <label for="role">Role:</label>
+      <select id="role" required>
+        <option value="">Choose a role</option>
+        <option value="security_analyst">Security Analyst</option>
+        <option value="ethical_hacker">Ethical Hacker</option>
+        <option value="network_defender">Network Defender</option>
+      </select><br><br>
+      
+      <input type="submit" value="Create Character">
+    </form>
+  </div>
+  
+  <div id="gameWorld">
+    <h2>Welcome, <span id="characterName"></span>!</h2>
+    <h3>Your Role: <span id="characterRole"></span></h3>
+  </div>
+  
+  <div id="missions" style="display: none;">
+    <h2>Missions:</h2>
+  </div>
+  
+  <div id="experience" style="display: none;">
+    <p>Level: <span id="level">1</span></p>
+    
+    <div id="progressBar">
+      <div id="progressBarFill"></div>
+    </div>
+    
+    <p>Experience: <span id="experiencePoints">0</span></p>
+  </div>
+  
+  <div id="collaboration" style="display: none;">
+    <!-- Collaboration features -->
+  </div>
+  
+  <script>
+    // Game logic using JavaScript
+    
+    // Character object
+    let character = {
+      name: '',
+      role: '',
+      level: 1,
+      experience: 0,
+    };
+    
+    // Mission object based on character role
+    const missionsByRole = {
+      security_analyst: [
+        { title: "Mission 1", description: "Analyze and identify security vulnerabilities in the system", difficulty: 1 },
+        { title: "Mission 2", description: "Create a report on the security risks and mitigation strategies", difficulty: 2 },
+        { title: "Mission 3", description: "Investigate a suspicious network activity and provide recommendations", difficulty: 3 },
+        { title: "Mission 4", description: "Conduct a security audit of the organization's infrastructure", difficulty: 4 },
+      ],
+      ethical_hacker: [
+        { title: "Mission 1", description: "Perform penetration testing on the target system", difficulty: 2 },
+        { title: "Mission 2", description: "Exploit a known vulnerability and gain unauthorized access", difficulty: 3 },
+        { title: "Mission 3", description: "Securely hack into a target system and leave no trace", difficulty: 4 },
+        { title: "Mission 4", description: "Defend against simulated cyber attacks and identify weaknesses", difficulty: 5 },
+      ],
+      network_defender: [
+        { title: "Mission 1", description: "Monitor network traffic and detect suspicious activities", difficulty: 1 },
+        { title: "Mission 2", description: "Implement network security measures and firewall rules", difficulty: 2 },
+        { title: "Mission 3", description: "Respond to network incidents and perform incident analysis", difficulty: 3 },
+        { title: "Mission 4", description: "Secure the network against DDoS attacks and intrusion attempts", difficulty: 4 },
+      ],
+    };
+    
+    // Function to create the character
+    function createCharacter() {
+      const form = document.getElementById('characterCreationForm');
+      const nameInput = form.elements['name'];
+      const roleInput = form.elements['role'];
+      
+      // Validate user inputs
+      if (nameInput.value.trim() === '' || roleInput.value === '') {
+        // Display error message or perform validation logic
+        return;
+      }
+      
+      // Store character information
+      character.name = nameInput.value.trim();
+      character.role = roleInput.value;
+      
+      // Hide character creation interface
+      document.getElementById('characterCreation').style.display = 'none';
+      
+      // Display game world and other components
+      document.getElementById('gameWorld').style.display = 'block';
+      document.getElementById('missions').style.display = 'block';
+      document.getElementById('experience').style.display = 'block';
+      document.getElementById('collaboration').style.display = 'block';
+      
+      // Set character name and role on the interface
+      document.getElementById('characterName').textContent = character.name;
+      document.getElementById('characterRole').textContent = character.role;
+      
+      // Start the game and display initial missions
+      startGame();
+      displayMissions();
+    }
+    
+    // Function to start the game
+    function startGame() {
+      // Game initialization logic
+      
+      // Example: Play background music
+      const bgMusic = new Audio('background_music.mp3');
+      bgMusic.loop = true;
+      bgMusic.play();
+    }
+    
+    // Function to display missions based on character role
+    function displayMissions() {
+      const missionsElement = document.getElementById('missions');
+      missionsElement.innerHTML = ''; // Clear previous missions
+      
+      const roleMissions = missionsByRole[character.role];
+      
+      for (let i = 0; i < roleMissions.length; i++) {
+        const mission = roleMissions[i];
+        
+        // Create a mission element dynamically
+        const missionElement = document.createElement('div');
+        missionElement.classList.add('mission');
+        
+        // Set the mission details
+        missionElement.innerHTML = `
+          <h3>${mission.title}</h3>
+          <p>${mission.description}</p>
+          <button onclick="completeMission(${i})">Complete</button>
+        `;
+        
+        // Append the mission element to the missions container
+        missionsElement.appendChild(missionElement);
+      }
+    }
+    
+    // Function to complete a mission
+    function completeMission(index) {
+      const roleMissions = missionsByRole[character.role];
+      
+      // Get the selected mission
+      const mission = roleMissions[index];
+      
+      // Perform mission completion logic
+      
+      // Example: Increase character experience based on mission difficulty
+      character.experience += mission.difficulty * 10;
+      
+      // Check if character has leveled up
+      const experienceThreshold = calculateExperienceThreshold(character.level);
+      if (character.experience >= experienceThreshold) {
+        character.level++;
+        character.experience = 0;
+        // Perform level up logic
+        
+        // Example: Unlock new abilities or upgrade character attributes
+      }
+      
+      // Update the interface
+      updateInterface();
+    }
+    
+    // Calculate the experience threshold for leveling up
+    function calculateExperienceThreshold(level) {
+      // Define a formula or table to calculate experience threshold based on level
+      return 100 * level;
+    }
+    
+    // Update character information on the interface
+    function updateCharacterInfo() {
+      document.getElementById('level').textContent = character.level;
+      document.getElementById('experiencePoints').textContent = character.experience;
+      
+      // Update progress bar
+      const progressBarFill = document.getElementById('progressBarFill');
+      const experienceThreshold = calculateExperienceThreshold(character.level);
+      const experiencePercentage = (character.experience / experienceThreshold) * 100;
+      progressBarFill.style.width = `${experiencePercentage}%`;
+    }
+    
+    // Call this function after completing a mission or leveling up to update the interface
+    function updateInterface() {
+      updateCharacterInfo();
+      displayMissions();
+    }
+    
+    // Initialize the game
+    function init() {
+      // Hide other components except for character creation initially
+      document.getElementById('gameWorld').style.display = 'none';
+      document.getElementById('missions').style.display = 'none';
+      document.getElementById('experience').style.display = 'none';
+      document.getElementById('collaboration').style.display = 'none';
+      
+      // Call additional initialization functions if necessary
+      
+      // Call the function to update character information on the interface
+      updateCharacterInfo();
+    }
+    
+    // Call the init() function to start the game
+    init();
+  </script>
+</body>
+</html>
