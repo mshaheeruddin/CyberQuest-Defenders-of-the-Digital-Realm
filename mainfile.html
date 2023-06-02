@@ -3,171 +3,402 @@
 <head>
   <title>CyberQuest</title>
   <style>
-    /* CSS styles for game interface */
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-      background-image: url('background.jpg');
-      background-size: cover;
-      background-position: center;
+      background-color: #f4f4f4;
     }
-    
+
     .container {
-      max-width: 800px;
+      max-width: 500px;
       margin: 0 auto;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: #fff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    
-    .heading {
+
+    h1 {
       text-align: center;
-      margin-bottom: 20px;
     }
-    
+
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
-    
-    label {
-      display: block;
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .mission-card {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    .question {
+      margin-bottom: 10px;
       font-weight: bold;
+    }
+
+    .option {
       margin-bottom: 5px;
     }
-    
-    select,
-    input[type="text"],
-    input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
+
+    .timer {
+      font-size: 18px;
+      font-weight: bold;
     }
-    
-    input[type="submit"] {
-      background-color: #4caf50;
-      color: #fff;
-      cursor: pointer;
-    }
-    
-    .game-info {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 5px;
-      padding: 20px;
+
+    .score {
+      text-align: center;
       margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .missions {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .mission {
-      background-color: #f2f2f2;
-      padding: 10px;
-      margin-bottom: 10px;
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-    
-    .mission:hover {
-      transform: scale(1.05);
-    }
-    
-    .experience {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .progress-bar {
-      background-color: #e5e5e5;
-      height: 20px;
-      border-radius: 10px;
-      width: 100%;
-      margin-bottom: 10px;
-      overflow: hidden;
-    }
-    
-    .progress-bar-fill {
-      background-color: #4caf50;
-      height: 100%;
-      border-radius: 10px;
-      transition: width 0.5s;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="heading">
-      <h1>CyberQuest</h1>
-    </div>
-    
-    <div id="characterCreation">
-      <div class="game-info">
-        <h2>Create Your Character</h2>
-        <form id="characterCreationForm">
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="role">Role:</label>
-            <select id="role" required>
-              <option value="">Select Role</option>
-              <option value="security_analyst">Security Analyst</option>
-              <option value="ethical_hacker">Ethical Hacker</option>
-              <option value="network_defender">Network Defender</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <input type="button" value="Create Character" onclick="createCharacter()">
-          </div>
-        </form>
+    <h1>Cybersecurity Game</h1>
+    <div id="start-section">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label for="role">Role:</label>
+        <select id="role" class="form-control">
+          <option value="">Select a role</option>
+          <option value="network_analyst">Network Analyst</option>
+          <option value="ethical_hacker">Ethical Hacker</option>
+          <option value="network_defender">Network Defender</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button onclick="startGame()" class="btn">Start Game</button>
       </div>
     </div>
-    
-    <div id="gameWorld" style="display: none;">
-      <div class="game-info">
-        <h2>Welcome, <span id="characterName"></span>!</h2>
-        <p>Role: <span id="characterRole"></span></p>
-      </div>
-      
-      <div id="missions" class="missions" style="display: none;">
-        <h2>Missions</h2>
-      </div>
-      
-      <div id="experience" class="experience" style="display: none;">
-        <h2>Experience</h2>
-        <div class="progress-bar">
-          <div id="progressBarFill" class="progress-bar-fill"></div>
-        </div>
-        <p>Level: <span id="level"></span></p>
-        <p>Experience Points: <span id="experiencePoints"></span></p>
-      </div>
-      
-      <div id="collaboration" class="game-info" style="display: none;">
-        <h2>Collaboration</h2>
-        <p>Collaborate with other players to solve challenges and complete missions.</p>
-      </div>
+    <div id="game-section" style="display: none;">
+      <h2 id="mission-title"></h2>
+      <p id="mission-description"></p>
+      <div id="question-section"></div>
+      <div id="score-section" style="display: none;"></div>
     </div>
-
-    <audio id="bgMusic" loop>
-      <source src="background_music.mp3" type="audio/mpeg">
-    </audio>
-
-    <script src="logic.js"></script>
-
   </div>
+
+  <script>
+    const roles = [
+      { id: 'network_analyst', name: 'Network Analyst' },
+      { id: 'ethical_hacker', name: 'Ethical Hacker' },
+      { id: 'network_defender', name: 'Network Defender' }
+    ];
+
+    const missionsByRole = {
+      network_analyst: [
+        {
+          id: 'na_mission1',
+          title: 'Mission 1 - Network Analyst (Easy)',
+          description: 'Analyze network traffic and identify suspicious activities.',
+          questions: [
+            {
+              question: 'What does IDS stand for?',
+              options: ['Intrusion Detection System', 'Internet Data Service', 'Intelligent Data Scanner'],
+              answer: 'Intrusion Detection System'
+            },
+            {
+            question: 'Which protocol is used for secure communication over the internet?',
+            options: ['HTTPS', 'FTP', 'SMTP', 'TELNET'],
+            answer: 'HTTPS'
+          },
+          {
+            question: 'What is a subnet mask used for?',
+            options: ['To determine the network portion of an IP address', 'To determine the host portion of an IP address', 'To divide an IP address into two parts', 'To determine the DNS server'],
+            answer: 'To divide an IP address into two parts'
+          },
+            // Add more questions for Network Analyst role
+          ]
+        },
+        {
+          id: 'na_mission2',
+          title: 'Mission 2 - Network Analyst (Hard)',
+          description: 'Analyze network traffic and identify suspicious activities.',
+          questions: [
+            {
+              question: 'What is true about VPN in Network security methods?',
+              options: ['A tool that authenticates the communication between a device and a secure network', 'VPN creating a secure, encrypted "tunnel" across the open internet.', 'VPN typically based on IPsec or SSL', 'All of the above'],
+              answer: 'All of the above'
+            },
+            {
+            question: 'WPA stands for –',
+            options: ['Wired Protected Access', 'Wireless Protected Access', 'Wireless Personal Access', 'Wired Personal Access'],
+            answer: 'Wireless Protected Access'
+          },
+          {
+            question: 'An HTTP connection uses port __________ whereas HTTPS uses port __________ and invokes SSL.',
+            options: ['40; 80', '60; 620', '80; 443', '620; 80'],
+            answer: '80; 443'
+          },
+            // Add more questions for Network Analyst role
+          ]
+        }
+        // Add more missions for Network Analyst role
+      ],
+      ethical_hacker: [
+        {
+          id: 'eh_mission1',
+          title: 'Mission 1 - Ethical Hacker (Easy)',
+          description: 'Identify vulnerabilities in the target system and exploit them responsibly.',
+          questions: [
+            {
+              question: 'What is a SQL injection attack?',
+              options: ['An attack that exploits vulnerabilities in a database query language', 'An attack that targets social engineering', 'An attack that floods a network with traffic'],
+              answer: 'An attack that exploits vulnerabilities in a database query language'
+            },
+            // Add more questions for Ethical Hacker role
+          ]
+        },
+        // Add more missions for Ethical Hacker role
+      ],
+      network_defender: [
+        {
+          id: 'nd_mission1',
+          title: 'Mission 1 - Network Defender (Easy)',
+          description: 'Protect the network from external threats and ensure its integrity.',
+          questions: [
+            {
+              question: 'What is a firewall?',
+              options: ['A network security device that monitors and filters incoming/outgoing network traffic', 'A hardware device used to connect multiple computers in a network', 'A software program that encrypts data transmitted over a network'],
+              answer: 'A network security device that monitors and filters incoming/outgoing network traffic'
+            },
+            // Add more questions for Network Defender role
+          ]
+        },
+        // Add more missions for Network Defender role
+      ]
+    };
+
+    let playerName = '';
+    let playerRole = '';
+    let currentMissionIndex = 0;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timerInterval;
+
+    function startGame() {
+      playerName = document.getElementById('name').value;
+      playerRole = document.getElementById('role').value;
+
+      if (!playerName || !playerRole) {
+        alert('Please enter your name and select a role.');
+        return;
+      }
+
+      document.getElementById('start-section').style.display = 'none';
+      document.getElementById('game-section').style.display = 'block';
+
+      loadMission();
+    }
+
+    function loadMission() {
+      const mission = missionsByRole[playerRole][currentMissionIndex];
+      const questionSection = document.getElementById('question-section');
+
+      document.getElementById('mission-title').textContent = mission.title;
+      document.getElementById('mission-description').textContent = mission.description;
+
+      questionSection.innerHTML = '';
+
+      mission.questions.forEach((question, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'question';
+
+        const questionText = document.createElement('p');
+        questionText.textContent = `${index + 1}. ${question.question}`;
+        questionElement.appendChild(questionText);
+
+        question.options.forEach(option => {
+          const optionElement = document.createElement('div');
+          optionElement.className = 'option';
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `question-${index}`;
+          input.value = option;
+
+          const label = document.createElement('label');
+          label.textContent = option;
+
+          optionElement.appendChild(input);
+          optionElement.appendChild(label);
+
+          questionElement.appendChild(optionElement);
+        });
+
+        questionSection.appendChild(questionElement);
+      });
+
+      const submitButton = document.createElement('button');
+      submitButton.className = 'btn';
+      submitButton.textContent = 'Submit';
+      submitButton.onclick = submitAnswer;
+
+      questionSection.appendChild(submitButton);
+
+      startTimer();
+    }
+
+    function startTimer() {
+      const timerElement = document.createElement('div');
+      timerElement.className = 'timer';
+      timerElement.textContent = 'Time Left: 30 seconds';
+
+      document.getElementById('question-section').appendChild(timerElement);
+
+      let secondsLeft = 30;
+
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+
+        if (secondsLeft === 0) {
+          clearInterval(timerInterval);
+          submitAnswer();
+        } else {
+          timerElement.textContent = `Time Left: ${secondsLeft} seconds`;
+        }
+      }, 1000);
+    }
+
+    function submitAnswer() {
+      clearInterval(timerInterval);
+
+      const mission = missionsByRole[playerRole][currentMissionIndex];
+      const selectedOptions = document.querySelectorAll(`input[name="question-${currentQuestionIndex}"]:checked`);
+      const selectedOption = selectedOptions.length > 0 ? selectedOptions[0].value : '';
+
+      if (!selectedOption) {
+        alert('Please select an option.');
+        return;
+      }
+
+      if (selectedOption === mission.questions[currentQuestionIndex].answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex === mission.questions.length) {
+        displayScore();
+      } else {
+        loadNextQuestion();
+      }
+    }
+
+    function loadNextQuestion() {
+      const mission = missionsByRole[playerRole][currentMissionIndex];
+      const questionSection = document.getElementById('question-section');
+
+      questionSection.innerHTML = '';
+
+      const questionElement = document.createElement('div');
+      questionElement.className = 'question';
+
+      const questionText = document.createElement('p');
+      questionText.textContent = `${currentQuestionIndex + 1}. ${mission.questions[currentQuestionIndex].question}`;
+      questionElement.appendChild(questionText);
+
+      mission.questions[currentQuestionIndex].options.forEach(option => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `question-${currentQuestionIndex}`;
+        input.value = option;
+
+        const label = document.createElement('label');
+        label.textContent = option;
+
+        optionElement.appendChild(input);
+        optionElement.appendChild(label);
+
+        questionElement.appendChild(optionElement);
+      });
+
+      questionSection.appendChild(questionElement);
+
+      const submitButton = document.createElement('button');
+      submitButton.className = 'btn';
+      submitButton.textContent = 'Submit';
+      submitButton.onclick = submitAnswer;
+
+      questionSection.appendChild(submitButton);
+
+      startTimer();
+    }
+
+    function displayScore() {
+      const mission = missionsByRole[playerRole][currentMissionIndex];
+      const scoreSection = document.getElementById('score-section');
+
+      document.getElementById('question-section').style.display = 'none';
+      scoreSection.innerHTML = '';
+
+      const scoreElement = document.createElement('div');
+      scoreElement.className = 'score';
+      scoreElement.textContent = `Score: ${score}/${mission.questions.length}`;
+
+      const nextMissionButton = document.createElement('button');
+      nextMissionButton.className = 'btn';
+      nextMissionButton.textContent = 'Next Mission';
+      nextMissionButton.onclick = nextMission;
+
+      scoreSection.appendChild(scoreElement);
+      scoreSection.appendChild(nextMissionButton);
+
+      scoreSection.style.display = 'block';
+    }
+
+    function nextMission() {
+      const mission = missionsByRole[playerRole][currentMissionIndex];
+
+      currentMissionIndex++;
+      currentQuestionIndex = 0;
+      score = 0;
+
+      if (currentMissionIndex === missionsByRole[playerRole].length) {
+        endGame();
+      } else {
+        document.getElementById('mission-title').textContent = mission.title;
+        document.getElementById('mission-description').textContent = mission.description;
+        document.getElementById('question-section').style.display = 'block';
+        document.getElementById('score-section').style.display = 'none';
+        loadNextQuestion();
+      }
+    }
+
+    function endGame() {
+      const gameSection = document.getElementById('game-section');
+
+      gameSection.innerHTML = '';
+
+      const endMessage = document.createElement('h2');
+      endMessage.textContent = `Congratulations, ${playerName}! You have completed all missions.`;
+
+      gameSection.appendChild(endMessage);
+    }
+  </script>
+</body>
+</html>
 </body>
 </html>
